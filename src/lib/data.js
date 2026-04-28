@@ -319,3 +319,35 @@ export function buildCalendarDays() {
   }
   return days;
 }
+export function getHighestSteps() {
+  return parseInt(localStorage.getItem("highestSteps") || "0");
+}
+
+export function updateHighestSteps(steps) {
+  const current = getHighestSteps();
+  if (steps > current) {
+    localStorage.setItem("highestSteps", steps);
+  }
+}
+
+export function getHighestWater() {
+  return parseFloat(localStorage.getItem("highestWater") || "0");
+}
+
+export function updateHighestWater(water) {
+  const current = getHighestWater();
+  if (water > current) {
+    localStorage.setItem("highestWater", water);
+  }
+}
+
+export function getBestStreak() {
+  return parseInt(localStorage.getItem("bestStreak") || "0");
+}
+
+export function updateBestStreak(streak) {
+  const current = getBestStreak();
+  if (streak > current) {
+    localStorage.setItem("bestStreak", streak);
+  }
+}
