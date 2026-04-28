@@ -10,6 +10,9 @@ import {
   getWaterLog, saveWaterEntry, getTodayWater,
   getStrengthLog, addStrengthEntry, getBestPushups,
   getPhotos, addPhoto, deletePhoto,
+  getHighestSteps, updateHighestSteps,
+  getHighestWater, updateHighestWater,
+  getBestStreak, updateBestStreak,
 } from '../lib/data'
 
 import ShareProgress from '../components/ShareProgress'
@@ -33,7 +36,12 @@ const FlameIcon   = (p) => <Icon {...p} d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5
 const AlertIcon   = (p) => <Icon {...p} d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01" />
 const XIcon       = (p) => <Icon {...p} d="M18 6L6 18M6 6l12 12" />
 const StepsIcon   = (p) => <Icon {...p} d="M3 21l5-5m0 0l5-5m-5 5l-1.5-1.5M13 16l5-5m0 0l-1.5-1.5M8 16l5-5" />
-
+const UserIcon = (p) => (
+  <Icon
+    {...p}
+    d="M20 21a8 8 0 00-16 0M12 11a4 4 0 100-8 4 4 0 000 8"
+  />
+)
 // ─── Confetti ─────────────────────────────────────────────────────────────────
 function fireConfetti() {
   if (typeof window === 'undefined') return
@@ -96,6 +104,7 @@ function ProgressRing({ pct, size = 120, stroke = 10 }) {
 
 // ─── TAB: HOME ────────────────────────────────────────────────────────────────
 function HomeTab({ refresh, setTab }) {
+  
   const today = getTodayKey()
   const dayNum = getDayNumber()
   const countdown = getCountdownDays()
@@ -326,18 +335,26 @@ function TrackersTab({ refresh }) {
   // Steps state
   const [steps, setSteps] = useState(() => String(getTodaySteps() || ''))
   function saveSteps() {
-    if (!steps) return
-    saveStepEntry(parseInt(steps))
-    refresh()
-  }
+  if (!steps) return
+  const newSteps = parseInt(steps)
+
+  saveStepEntry(newSteps)
+  updateHighestSteps(newSteps)
+
+  refresh()
+}
 
   // Water state
   const [water, setWater] = useState(() => String(getTodayWater() || ''))
   function saveWater() {
-    if (!water) return
-    saveWaterEntry(parseInt(water))
-    refresh()
-  }
+  if (!water) return
+  const newWater = parseInt(water)
+
+  saveWaterEntry(newWater)
+  updateHighestWater(newWater)
+
+  refresh()
+}
 
   const stepsVal = parseInt(steps) || 0
   const stepsPct = Math.min(100, Math.round((stepsVal / 10000) * 100))
@@ -429,7 +446,13 @@ function TrackersTab({ refresh }) {
         <div className="flex flex-wrap gap-2 mb-4">
           {Array.from({ length: 14 }, (_, i) => (
             <button key={i}
-              onClick={() => { const v = String(i + 1); setWater(v); saveWaterEntry(i + 1); refresh() }}
+              onClick={() => {
+                  const v = String(i + 1)
+                  setWater(v)
+                  saveWaterEntry(i + 1)
+                  updateHighestWater(i + 1)
+                  refresh()
+                }}
               className={`w-10 h-10 rounded-xl text-base transition-all active:scale-90 ${i < waterVal ? 'bg-blue-500 text-white' : 'bg-[#222] text-gray-600 border border-[#333]'}`}
             >💧</button>
           ))}
@@ -703,14 +726,136 @@ function LazyTab({ setTab }) {
     </div>
   )
 }
+function ProfileTab() {
+  const photos = getPhotos()
 
+  const achievements = [
+    {
+      name: "First Workout",
+      unlocked: getDoneDays().length >= 1,
+      icon: "🏅"
+    },
+    {
+      name: "7 Day Streak",
+      unlocked: getStreak() >= 7,
+      icon: "🔥"
+    },
+    {
+      name: "10K Steps",
+      unlocked: getHighestSteps() >= 10000,
+      icon: "👟"
+    },
+    {
+      name: "20 Pushups",
+      unlocked: getBestPushups() >= 20,
+      icon: "💪"
+    },
+    {
+      name: "First Progress Photo",
+      unlocked: photos.length >= 1,
+      icon: "📸"
+    },
+    {
+      name: "Halfway Challenge",
+      unlocked: getDayNumber() >= 25,
+      icon: "🏆"
+    },
+    {
+      name: "Challenge Complete",
+      unlocked: getDayNumber() >= TOTAL_DAYS,
+      icon: "👑"
+    }
+  ]
+
+  return (
+    <div className="flex flex-col gap-4 p-4 animate-slide-up">
+      
+      {/* Personal Records */}
+      <Card cls="p-5">
+        <div className="text-xl font-bold mb-4">
+          Personal Records
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-[#222] rounded-xl p-3">
+            🔥 Best Pushups
+            <div className="text-xl font-bold text-orange-400">
+              {getBestPushups()}
+            </div>
+          </div>
+
+          <div className="bg-[#222] rounded-xl p-3">
+            👟 Highest Steps
+            <div className="text-xl font-bold text-green-400">
+              {getHighestSteps()}
+            </div>
+          </div>
+
+          <div className="bg-[#222] rounded-xl p-3">
+            💧 Highest Water
+            <div className="text-xl font-bold text-blue-400">
+              {getHighestWater()}
+            </div>
+          </div>
+
+          <div className="bg-[#222] rounded-xl p-3">
+            🔥 Current Streak
+            <div className="text-xl font-bold text-red-400">
+              {getStreak()}
+            </div>
+          </div>
+
+          <div className="bg-[#222] rounded-xl p-3">
+            ✅ Workouts Done
+            <div className="text-xl font-bold text-purple-400">
+              {getDoneDays().length}
+            </div>
+          </div>
+
+          <div className="bg-[#222] rounded-xl p-3">
+            ⏳ Days Left
+            <div className="text-xl font-bold text-yellow-400">
+              {getCountdownDays()}
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* Achievements */}
+      <Card cls="p-5">
+        <div className="text-xl font-bold mb-4">
+          Achievements
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          {achievements.map((badge) => (
+            <div
+              key={badge.name}
+              className={`rounded-xl p-3 text-sm ${
+                badge.unlocked
+                  ? "bg-green-500/20 text-green-400"
+                  : "bg-[#222] text-gray-500"
+              }`}
+            >
+              <div className="text-lg mb-1">
+                {badge.icon}
+              </div>
+              {badge.name}
+            </div>
+          ))}
+        </div>
+      </Card>
+    </div>
+  )
+}
 // ─── BOTTOM NAV ──────────────────────────────────────────────────────────────
 const TABS = [
-  { id: 'home',     label: 'Home',     Icon: HomeIcon },
+  { id: 'home', label: 'Home', Icon: HomeIcon },
   { id: 'workout',  label: 'Workout',  Icon: DumbellIcon },
   { id: 'trackers', label: 'Trackers', Icon: DropIcon },
   { id: 'progress', label: 'Progress', Icon: ChartIcon },
   { id: 'calendar', label: 'Calendar', Icon: CalIcon },
+  { id: 'profile', label: 'Profile', Icon: UserIcon },
 ]
 
 // ─── ROOT APP ─────────────────────────────────────────────────────────────────
@@ -738,6 +883,7 @@ export default function App() {
         {tab === 'trackers' && <TrackersTab {...tabProps} />}
         {tab === 'progress' && <ProgressTab {...tabProps} />}
         {tab === 'calendar' && <CalendarTab {...tabProps} />}
+        {tab === 'profile' && <ProfileTab {...tabProps} />}
         {tab === 'lazy'     && <LazyTab     {...tabProps} />}
       </div>
 
