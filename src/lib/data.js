@@ -1,107 +1,136 @@
 // ─── Challenge constants ───────────────────────────────────────────────────
-export const CHALLENGE_START = new Date("2026-04-29T00:00:00");
-export const CHALLENGE_END = new Date("2026-06-17T23:59:59");
+export const CHALLENGE_START = new Date("2026-05-04T00:00:00");
+export const CHALLENGE_END = new Date("2026-06-20T23:59:59");
 export const TOTAL_DAYS = 50;
 
 // ─── Workout schedule (keyed by JS getDay(): 0=Sun … 6=Sat) ───────────────
 export const WORKOUTS = {
   1: {
-    name: "Push + Core",
+    name: "Push + Core + Biceps",
     tag: "Monday",
     color: "from-orange-500 to-red-500",
     exercises: [
       { id: "pu", name: "Pushups", detail: "4 sets", icon: "💪" },
-      { id: "dp", name: "Dips", detail: "3 sets", icon: "🏋️" },
-      { id: "pp", name: "Pike Pushups", detail: "3 sets", icon: "🔼" },
-      { id: "pl", name: "Plank", detail: "Max hold", icon: "⏱️" },
+      { id: "ip", name: "Incline Pushups", detail: "3 sets", icon: "📈" },
+      { id: "dp", name: "Diamond Pushups", detail: "2 sets", icon: "🔺" },
+      { id: "bd", name: "Bench Dips", detail: "3 sets", icon: "🪑" },
+      { id: "bc", name: "Brick Curls", detail: "3 sets (10–15)", icon: "🧱" },
+      { id: "pl", name: "Plank", detail: "3 × 45–60 sec", icon: "⏱️" },
       { id: "lr", name: "Leg Raises", detail: "3 sets", icon: "🦵" },
-      { id: "jg", name: "Jog", detail: "15 min", icon: "🏃" },
+      { id: "rn", name: "Run", detail: "400–800m", icon: "🏃" },
+      { id: "wk", name: "Walk", detail: "3–3.5 km", icon: "🚶" },
     ],
   },
+
   2: {
-    name: "Legs + Sprints",
+    name: "Leg Day",
     tag: "Tuesday",
     color: "from-blue-500 to-cyan-500",
     exercises: [
-      { id: "sq", name: "Squats", detail: "4×20", icon: "🦵" },
-      { id: "lu", name: "Lunges", detail: "3×12 each", icon: "🚶" },
-      { id: "js", name: "Jump Squats", detail: "3 sets", icon: "⬆️" },
-      { id: "cr", name: "Calf Raises", detail: "4 sets", icon: "👣" },
-      { id: "sp", name: "100m Sprints", detail: "6 runs", icon: "⚡" },
+      { id: "sq", name: "Squats", detail: "4 sets", icon: "🦵" },
+      { id: "lu", name: "Lunges", detail: "3 sets each leg", icon: "🚶" },
+      { id: "js", name: "Jump Squats", detail: "2 sets", icon: "⬆️" },
+      { id: "cr", name: "Calf Raises", detail: "3 sets", icon: "👣" },
+      { id: "stp", name: "Step-ups", detail: "3 sets", icon: "🪜" },
+      { id: "rn", name: "Run", detail: "400–800m", icon: "🏃" },
+      { id: "wk", name: "Walk", detail: "3–5 km", icon: "🚶" },
     ],
   },
+
   3: {
-    name: "Back + Run",
+    name: "Back + Biceps + Light Cardio",
     tag: "Wednesday",
     color: "from-green-500 to-teal-500",
     exercises: [
-      { id: "rw", name: "Rows", detail: "4 sets", icon: "🏊" },
+      { id: "rw", name: "Backpack Rows", detail: "4 sets", icon: "🎒" },
       { id: "sh", name: "Superman Holds", detail: "3 sets", icon: "🦸" },
       { id: "rs", name: "Reverse Snow Angels", detail: "3 sets", icon: "❄️" },
-      { id: "bc", name: "Bicep Curls", detail: "3 sets", icon: "💪" },
-      { id: "jg", name: "Jog", detail: "15 min", icon: "🏃" },
+      {
+        id: "bc",
+        name: "Bicep Curls",
+        detail: "3 sets (12–15 reps)",
+        icon: "💪",
+      },
+      {
+        id: "sc",
+        name: "Slow Curls",
+        detail: "2 sets (controlled)",
+        icon: "🐢",
+      },
+      { id: "jg", name: "Light Jog", detail: "10–15 min", icon: "🏃" },
     ],
   },
+
   4: {
-    name: "Full Body Circuit",
+    name: "Upper + Biceps",
     tag: "Thursday",
     color: "from-purple-500 to-pink-500",
     exercises: [
-      { id: "pu", name: "Pushups", detail: "15 reps/round", icon: "💪" },
-      { id: "sq", name: "Squats", detail: "20 reps/round", icon: "🦵" },
-      {
-        id: "mc",
-        name: "Mountain Climbers",
-        detail: "20 reps/round",
-        icon: "🧗",
-      },
-      { id: "bu", name: "Burpees", detail: "10 reps/round", icon: "🔄" },
-      { id: "pl", name: "Plank", detail: "45 sec/round", icon: "⏱️" },
-      { id: "rd", name: "Rounds", detail: "3–5 rounds", icon: "🔁" },
-      { id: "jg", name: "Jog", detail: "10 min", icon: "🏃" },
+      { id: "pu", name: "Pushups", detail: "4 sets", icon: "💪" },
+      { id: "dp", name: "Decline Pushups", detail: "3 sets", icon: "📉" },
+      { id: "cp", name: "Close Pushups", detail: "2 sets", icon: "🔻" },
+      { id: "bd", name: "Bench Dips", detail: "3 sets", icon: "🪑" },
+      { id: "bc", name: "Brick Curls", detail: "4 sets", icon: "🧱" },
+      { id: "sc", name: "Slow Curls", detail: "2 sets", icon: "🐢" },
+      { id: "st", name: "Shoulder Taps", detail: "3 sets", icon: "🤲" },
+      { id: "rn", name: "Run", detail: "800m–1 km", icon: "🏃" },
+      { id: "wk", name: "Walk", detail: "3–4 km", icon: "🚶" },
     ],
   },
+
   5: {
-    name: "Push + Sprints",
+    name: "Legs + Core",
     tag: "Friday",
     color: "from-yellow-500 to-orange-500",
     exercises: [
-      { id: "pu", name: "Pushups", detail: "4 sets", icon: "💪" },
-      { id: "dp", name: "Dips", detail: "3 sets", icon: "🏋️" },
-      { id: "pp", name: "Pike Pushups", detail: "3 sets", icon: "🔼" },
-      { id: "pl", name: "Plank", detail: "Max hold", icon: "⏱️" },
-      { id: "lr", name: "Leg Raises", detail: "3 sets", icon: "🦵" },
-      { id: "sp", name: "100m Sprints", detail: "8 runs", icon: "⚡" },
+      { id: "sq", name: "Squats", detail: "3 sets", icon: "🦵" },
+      { id: "lu", name: "Lunges", detail: "3 sets", icon: "🚶" },
+      { id: "stp", name: "Step-ups", detail: "3 sets", icon: "🪜" },
+      { id: "ws", name: "Wall Sit", detail: "2 sets", icon: "🧱" },
+      { id: "pl", name: "Plank", detail: "3 sets", icon: "⏱️" },
+      { id: "rw", name: "Reverse Walk", detail: "200–300m", icon: "↩️" },
+      { id: "rn", name: "Run", detail: "800m", icon: "🏃" },
+      { id: "wk", name: "Walk", detail: "3–4 km", icon: "🚶" },
     ],
   },
+
   6: {
-    name: "Cardio + Abs",
+    name: "Active + Light Arms",
     tag: "Saturday",
     color: "from-pink-500 to-rose-500",
     exercises: [
-      { id: "jg", name: "Easy Jog", detail: "20–30 min", icon: "🏃" },
-      { id: "ab", name: "Abs Workout", detail: "3 sets", icon: "🔥" },
+      { id: "wk", name: "Walk", detail: "5–6 km", icon: "🚶" },
+      { id: "rn", name: "Easy Run", detail: "800m–1 km", icon: "🏃" },
+      { id: "pu", name: "Pushups", detail: "2 sets", icon: "💪" },
+      { id: "bc", name: "Light Curls", detail: "2 sets", icon: "🧱" },
       { id: "st", name: "Stretching", detail: "10 min", icon: "🧘" },
     ],
   },
+
   0: {
     name: "Recovery Day",
     tag: "Sunday",
     color: "from-slate-500 to-gray-600",
     exercises: [
-      { id: "rw", name: "Recovery Walk", detail: "20–30 min", icon: "🚶" },
+      { id: "wk", name: "Recovery Walk", detail: "3–4 km", icon: "🚶" },
       { id: "st", name: "Stretching", detail: "15 min", icon: "🧘" },
     ],
   },
 };
 
 // ─── Date helpers ───────────────────────────────────────────────────────────
-export function getTodayKey() {
-  return new Date().toISOString().slice(0, 10);
-}
 
+function getLocalDateKey(d = new Date()) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+export function getTodayKey() {
+  return getLocalDateKey(new Date());
+}
 export function dateKey(d) {
-  return d.toISOString().slice(0, 10);
+  return getLocalDateKey(d);
 }
 
 export function getDayNumber() {
@@ -198,7 +227,7 @@ export function markDayDone(dateStr) {
   const days = getDoneDays();
   if (!days.includes(dateStr)) {
     days.push(dateStr);
-    setDoneDays(days);
+    markDayDone(getTodayKey());
   }
 }
 
@@ -210,7 +239,7 @@ export function getStreak() {
   const today = getTodayKey();
   let cur = new Date(today);
   while (true) {
-    const k = cur.toISOString().slice(0, 10);
+    const k = getLocalDateKey(cur);
     if (done.includes(k)) {
       streak++;
       cur.setDate(cur.getDate() - 1);
@@ -310,16 +339,22 @@ export function buildCalendarDays() {
   for (let i = 0; i < TOTAL_DAYS; i++) {
     const d = new Date(start);
     d.setDate(start.getDate() + i);
-    const k = d.toISOString().slice(0, 10);
+    const k = getLocalDateKey(d);
     let status = "future";
-    if (d.getTime() === today.getTime()) status = "today";
-    else if (done.includes(k)) status = "done";
-    else if (d < today) status = "missed";
+
+    if (done.includes(k)) {
+      status = "done";
+    } else if (d.getTime() === today.getTime()) {
+      status = "today";
+    } else if (d < today) {
+      status = "missed";
+    }
     days.push({ date: d, key: k, dayNum: i + 1, status });
   }
   return days;
 }
 export function getHighestSteps() {
+  if (typeof window === "undefined") return 0;
   return parseInt(localStorage.getItem("highestSteps") || "0");
 }
 
@@ -331,6 +366,7 @@ export function updateHighestSteps(steps) {
 }
 
 export function getHighestWater() {
+  if (typeof window === "undefined") return 0;
   return parseFloat(localStorage.getItem("highestWater") || "0");
 }
 
