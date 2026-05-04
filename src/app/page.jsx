@@ -14,7 +14,6 @@ import {
   getHighestWater, updateHighestWater,
   getBestStreak, updateBestStreak,
 } from '../lib/data'
-
 import ShareProgress from '../components/ShareProgress'
 
 // ─── Icons (inline SVG, no dependency) ──────────────────────────────────────
@@ -594,8 +593,8 @@ function CalendarTab() {
   const missed = days.filter(d => d.status === 'missed').length
   const remaining = days.filter(d => d.status === 'future' || d.status === 'today').length
 
-  // Build calendar grid — need empty cells to align weekdays
-  const startDow = new Date('2025-04-29T00:00:00').getDay() // 2 = Tuesday
+  // Calendar grid alignment
+  const startDow = new Date('2026-04-29T00:00:00').getDay()
   const WEEKDAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
   const cells = [...Array(startDow).fill(null), ...days]
 
@@ -606,9 +605,12 @@ function CalendarTab() {
     future: 'bg-[#1e1e1e] text-gray-500',
   }
 
+  const todayDow = new Date().getDay()
+
   return (
     <div className="flex flex-col gap-4 p-4 animate-slide-up">
-      {/* Stats row */}
+
+      {/* Stats */}
       <div className="grid grid-cols-3 gap-3">
         <div className="bg-green-500/10 border border-green-500/20 rounded-2xl p-4 text-center">
           <div className="text-3xl font-bold text-green-400">{done}</div>
@@ -624,22 +626,33 @@ function CalendarTab() {
         </div>
       </div>
 
-      {/* Calendar grid */}
+      {/* Calendar */}
       <Card cls="p-4">
-        <div className="text-sm font-semibold text-gray-300 mb-4">Apr 29 — Jun 17, 2025</div>
-        {/* Weekday headers */}
+        <div className="text-sm font-semibold text-gray-300 mb-4">2026</div>
+
+        {/* Weekdays */}
         <div className="grid grid-cols-7 mb-2">
           {WEEKDAYS.map(d => (
-            <div key={d} className="text-center text-xs text-gray-600 font-semibold py-1">{d}</div>
+            <div key={d} className="text-center text-xs text-gray-600 font-semibold py-1">
+              {d}
+            </div>
           ))}
         </div>
-        {/* Day cells */}
+
+        {/* Days */}
         <div className="grid grid-cols-7 gap-1">
           {cells.map((day, i) => (
-            <div key={i} className={`aspect-square flex flex-col items-center justify-center rounded-lg text-xs ${day ? statusStyle[day.status] : ''}`}>
+            <div
+              key={i}
+              className={`aspect-square flex flex-col items-center justify-center rounded-lg text-xs ${
+                day ? statusStyle[day.status] : ''
+              }`}
+            >
               {day && (
                 <>
-                  <div className="text-[11px] font-semibold leading-none">{day.date.getDate()}</div>
+                  <div className="text-[11px] font-semibold leading-none">
+                    {day.date.getDate()}
+                  </div>
                   {day.status === 'done' && <div className="text-[8px] mt-0.5">✓</div>}
                   {day.status === 'today' && <div className="text-[8px] mt-0.5">●</div>}
                 </>
@@ -647,9 +660,15 @@ function CalendarTab() {
             </div>
           ))}
         </div>
+
         {/* Legend */}
         <div className="flex gap-4 mt-4 justify-center">
-          {[['bg-orange-500', 'Today'], ['bg-green-500/40', 'Done'], ['bg-red-500/40', 'Missed'], ['bg-[#1e1e1e]', 'Upcoming']].map(([bg, label]) => (
+          {[
+            ['bg-orange-500', 'Today'],
+            ['bg-green-500/40', 'Done'],
+            ['bg-red-500/40', 'Missed'],
+            ['bg-[#1e1e1e]', 'Upcoming'],
+          ].map(([bg, label]) => (
             <div key={label} className="flex items-center gap-1.5">
               <div className={`w-2.5 h-2.5 rounded ${bg}`} />
               <span className="text-xs text-gray-500">{label}</span>
@@ -658,21 +677,35 @@ function CalendarTab() {
         </div>
       </Card>
 
-      {/* All workouts reference */}
+      {/* Weekly Schedule */}
       <Card cls="p-5">
         <div className="text-sm font-semibold text-gray-300 mb-3">Weekly Schedule</div>
-        {Object.entries(WORKOUTS).map(([dow, wk]) => (
-          <div key={dow} className="flex items-start gap-3 py-3 border-b border-[#222] last:border-0">
-            <div className={`text-xs font-bold px-2 py-1 rounded-lg bg-gradient-to-r ${wk.color} text-white min-w-[52px] text-center flex-shrink-0`}>
-              {wk.tag.slice(0, 3)}
+
+        {[0,1,2,3,4,5,6].map((dow) => {
+          const wk = WORKOUTS[dow]
+
+          return (
+            <div
+              key={dow}
+              className={`flex items-start gap-3 py-3 border-b border-[#222] last:border-0 ${
+                dow === todayDow ? 'bg-[#1a1a1a] rounded-xl px-2' : ''
+              }`}
+            >
+              <div className={`text-xs font-bold px-2 py-1 rounded-lg bg-gradient-to-r ${wk.color} text-white min-w-[52px] text-center flex-shrink-0`}>
+                {wk.tag.slice(0, 3)}
+              </div>
+
+              <div>
+                <div className="text-sm font-semibold text-white">{wk.name}</div>
+                <div className="text-xs text-gray-500 mt-0.5">
+                  {wk.exercises.map(e => e.name).join(' · ')}
+                </div>
+              </div>
             </div>
-            <div>
-              <div className="text-sm font-semibold text-white">{wk.name}</div>
-              <div className="text-xs text-gray-500 mt-0.5">{wk.exercises.map(e => e.name).join(' · ')}</div>
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </Card>
+
     </div>
   )
 }
@@ -862,45 +895,66 @@ const TABS = [
 export default function App() {
   const [tab, setTabRaw] = useState('home')
   const [tick, setTick] = useState(0)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    if ('serviceWorker' in navigator) {
+    setMounted(true)
+
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').catch(() => {})
     }
   }, [])
 
-  const refresh = useCallback(() => setTick(t => t + 1), [])
-  const setTab = useCallback((t) => { setTabRaw(t); window.scrollTo(0, 0) }, [])
+  // ✅ hooks must come BEFORE any return
+  const refresh = useCallback(() => {
+    setTick(t => t + 1)
+  }, [])
+
+  const setTab = useCallback((t) => {
+    setTabRaw(t)
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0)
+    }
+  }, [])
 
   const tabProps = { refresh, setTab, key: tick }
 
+  // ✅ return AFTER hooks
+  if (!mounted) return null
+
   return (
     <div className="min-h-screen bg-[#0f0f0f] flex flex-col max-w-[430px] mx-auto">
-      {/* Scrollable content area */}
+      
       <div className="flex-1 overflow-y-auto pb-20">
         {tab === 'home'     && <HomeTab     {...tabProps} />}
         {tab === 'workout'  && <WorkoutTab  {...tabProps} />}
         {tab === 'trackers' && <TrackersTab {...tabProps} />}
         {tab === 'progress' && <ProgressTab {...tabProps} />}
         {tab === 'calendar' && <CalendarTab {...tabProps} />}
-        {tab === 'profile' && <ProfileTab {...tabProps} />}
+        {tab === 'profile'  && <ProfileTab  {...tabProps} />}
         {tab === 'lazy'     && <LazyTab     {...tabProps} />}
       </div>
 
-      {/* Bottom Nav */}
-      <nav className="fixed bottom-0 inset-x-0 max-w-[430px] mx-auto bg-[#111]/95 backdrop-blur border-t border-[#2a2a2a] flex z-50"
-        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+      <nav
+        className="fixed bottom-0 inset-x-0 max-w-[430px] mx-auto bg-[#111]/95 backdrop-blur border-t border-[#2a2a2a] flex z-50"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      >
         {TABS.map(({ id, label, Icon: Ic }) => (
           <button
             key={id}
             onClick={() => setTab(id)}
-            className={`flex-1 flex flex-col items-center justify-center py-3 gap-0.5 transition-colors active:scale-90 ${tab === id ? 'text-orange-400' : 'text-gray-600'}`}
+            className={`flex-1 flex flex-col items-center justify-center py-3 gap-0.5 transition-colors active:scale-90 ${
+              tab === id ? 'text-orange-400' : 'text-gray-600'
+            }`}
           >
             <Ic size={22} />
-            <span className="text-[10px] font-semibold tracking-wide">{label}</span>
+            <span className="text-[10px] font-semibold tracking-wide">
+              {label}
+            </span>
           </button>
         ))}
       </nav>
+
     </div>
   )
 }
